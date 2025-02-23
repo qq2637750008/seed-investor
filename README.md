@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 # 区块链项目投资决策表
 
 这是一个帮助投资者评估区块链项目投资决策的在线工具。通过回答一系列关于项目背景、应用场景、估值等方面的问题，生成一份详细的投资评估报告。
+
+## 在线访问
+
+访问 [GitHub Pages](https://qq2637750008.github.io/seed-investor) 即可使用在线版本。
 
 ## 功能特点
 
@@ -33,3 +38,7 @@ npx http-server .
 ## 作者
 
 b站：teihaku
+=======
+# seed-investor
+seed investor
+>>>>>>> fbbfb60ea95994d18aff8bf1874fe7c53cc2e67c
