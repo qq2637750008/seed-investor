@@ -14,13 +14,13 @@
 
 ## 在线使用
 
-访问 [GitHub Pages](https://your-username.github.io/blockchain-investment-decision/) 即可使用在线版本。
+访问 [GitHub Pages](https://teihaku.github.io/blockchain-investment-decision) 即可使用在线版本。
 
 ## 本地运行
 
 1. 克隆仓库
 ```bash
-git clone https://github.com/your-username/blockchain-investment-decision.git
+git clone https://github.com/teihaku/blockchain-investment-decision.git
 ```
 
 2. 使用任意HTTP服务器运行，例如：

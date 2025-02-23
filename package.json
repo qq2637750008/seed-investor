@@ -1,0 +1,14 @@
+{
+  "name": "seed-invest",
+  "version": "1.0.0",
+  "description": "区块链项目投资决策表 - 帮助投资者评估区块链项目投资决策的工具",
+  "scripts": {
+    "start": "npx http-server . --port 8000"
+  },
+  "dependencies": {
+    "vue": "^3.3.4",
+    "html2canvas": "^1.4.1"
+  },
+  "author": "teihaku",
+  "license": "MIT"
+}
