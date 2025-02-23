@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一级市场项目投资决策表（b站：teihaku）</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        .question {
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .text-input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .text-input:focus {
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24,144,255,0.2);
+            outline: none;
+        }
+        .btn {
+            background-color: #1890ff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 16px;
+        }
+        .btn:hover {
+            background-color: #40a9ff;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(24,144,255,0.3);
+        }
+        .result {
+            margin-top: 30px;
+            padding: 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .error {
+            color: #ff4d4f;
+            margin-top: 12px;
+            padding: 12px;
+            background-color: #fff2f0;
+            border: 1px solid #ffccc7;
+            border-radius: 8px;
+        }
+        h1 {
+            color: #1f1f1f;
+            margin-bottom: 30px;
+            font-size: 28px;
+            text-align: center;
+        }
+        h3 {
+            color: #1f1f1f;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        h4 {
+            color: #434343;
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+        input[type='radio'] {
+            margin-right: 8px;
+        }
+        label {
+            margin-right: 20px;
+            color: #434343;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="form-container">
+        <h1>一级市场项目投资决策表（b站：teihaku）</h1>
+        
+        <!-- 项目名称输入 -->
+        <div v-if="currentStep === 1" class="question">
+            <h3>项目名称</h3>
+            <input type="text" v-model="answers.projectName" class="text-input" placeholder="请输入项目名称">
+        </div>
+
+        <!-- 第一题 -->
+        <div v-if="currentStep === 1" class="question">
+            <h3>1. 项目方背景调查</h3>
+            <div>
+                <h4>1.1 是否足够了解项目方的背景？</h4>
+                <input type="radio" v-model="answers.q1.background_passed" :value="true" id="q1-bg-yes">
+                <label for="q1-bg-yes">是</label>
+                <input type="radio" v-model="answers.q1.background_passed" :value="false" id="q1-bg-no">
+                <label for="q1-bg-no">否</label>
+            </div>
+            <div v-if="answers.q1.background_passed">
+                <textarea v-model="answers.q1.background_details" class="text-input" 
+                    placeholder="请输入团队概况（包括成员背景、以往项目等）" rows="4"></textarea>
+            </div>
+            <div v-if="answers.q1.background_passed === false" class="error">
+                <p>结论：不建议投资 - 项目方背景了解不足</p>
+            </div>
+
+            <div v-if="answers.q1.background_passed">
+                <h4>1.2 创始团队核心成员是否存在重大疾病隐患？</h4>
+                <input type="radio" v-model="answers.q1.health_passed" :value="false" id="q1-health-no">
+                <label for="q1-health-no">否</label>
+                <input type="radio" v-model="answers.q1.health_passed" :value="true" id="q1-health-yes">
+                <label for="q1-health-yes">是</label>
+            </div>
+            <div v-if="answers.q1.health_passed === true">
+                <textarea v-model="answers.q1.health_details" class="text-input" 
+                    placeholder="请详细说明存在的健康问题" rows="4"></textarea>
+            </div>
+            <div v-if="answers.q1.health_passed === true" class="error">
+                <p>风险提示：创始团队存在健康风险，请谨慎评估</p>
+            </div>
+
+            <div v-if="answers.q1.background_passed && answers.q1.health_passed !== null">
+                <h4>1.3 项目团队是否已完成KYC且可直接联系？</h4>
+                <input type="radio" v-model="answers.q1.kyc_passed" :value="true" id="q1-kyc-yes">
+                <label for="q1-kyc-yes">是</label>
+                <input type="radio" v-model="answers.q1.kyc_passed" :value="false" id="q1-kyc-no">
+                <label for="q1-kyc-no">否</label>
+            </div>
+            <div v-if="answers.q1.kyc_passed">
+                <textarea v-model="answers.q1.kyc_details" class="text-input" 
+                    placeholder="请输入KYC验证信息和团队成员联系方式" rows="4"></textarea>
+            </div>
+            <div v-if="answers.q1.kyc_passed === false" class="error">
+                <p>结论：不建议投资 - 项目方KYC未完成或无法直接联系</p>
+            </div>
+
+            <button @click="nextStep" class="btn" v-if="answers.q1.background_passed && answers.q1.background_details && answers.q1.health_passed !== null && answers.q1.kyc_passed && answers.q1.kyc_details">下一步</button>
+        </div>
+
+        <!-- 第二题 -->
+        <div v-if="currentStep === 2" class="question">
+            <h3>2. 项目的主要应用场景</h3>
+            <textarea v-model="answers.q2.application" class="text-input" 
+                placeholder="请详细描述项目的主要应用场景" rows="4"></textarea>
+            
+            <h4>2.1 项目所在地是否存在战争、法律等不稳定因素？</h4>
+            <div>
+                <input type="radio" v-model="answers.q2.has_risk" :value="true" id="q2-risk-yes">
+                <label for="q2-risk-yes">是</label>
+                <input type="radio" v-model="answers.q2.has_risk" :value="false" id="q2-risk-no">
+                <label for="q2-risk-no">否</label>
+            </div>
+            <div v-if="answers.q2.has_risk">
+                <textarea v-model="answers.q2.risk_details" class="text-input" 
+                    placeholder="请详细说明存在的不稳定因素" rows="4"></textarea>
+            </div>
+            <div v-if="answers.q2.has_risk" class="error">
+                <p>风险提示：项目所在地存在不稳定因素，请谨慎评估</p>
+            </div>
+            
+            <button @click="nextStep" class="btn" v-if="answers.q2.application && answers.q2.has_risk !== null && (!answers.q2.has_risk || (answers.q2.has_risk && answers.q2.risk_details))">下一步</button>
+        </div>
+
+        <!-- 第三题 -->
+        <div v-if="currentStep === 3" class="question">
+            <h3>3. 项目当前估值与股权结构</h3>
+            <textarea v-model="answers.q3" class="text-input" 
+                placeholder="请输入项目当前估值和股权结构详情" rows="4"></textarea>
+            <button @click="nextStep" class="btn" v-if="answers.q3">下一步</button>
+        </div>
+
+        <!-- 第四题 -->
+        <div v-if="currentStep === 4" class="question">
+            <h3>4. 项目预期估值</h3>
+            <textarea v-model="answers.q4" class="text-input" 
+                placeholder="请输入预期估值和估值理由" rows="4"></textarea>
+            <button @click="nextStep" class="btn" v-if="answers.q4">下一步</button>
+        </div>
+
+        <!-- 第五题 -->
+        <div v-if="currentStep === 5" class="question">
+            <h3>5. 项目是否存在安全边界？</h3>
+            <div>
+                <input type="radio" v-model="answers.q5.passed" :value="true" id="q5-yes">
+                <label for="q5-yes">是</label>
+                <input type="radio" v-model="answers.q5.passed" :value="false" id="q5-no">
+                <label for="q5-no">否</label>
+            </div>
+            <div v-if="answers.q5.passed">
+                <textarea v-model="answers.q5.details" class="text-input" 
+                    placeholder="请输入目前估值与预期估值的对比分析" rows="4"></textarea>
+            </div>
+            <button @click="nextStep" class="btn" v-if="answers.q5.passed && answers.q5.details">下一步</button>
+            <div v-if="answers.q5.passed === false" class="error">
+                <p>结论：不建议投资 - 项目缺乏安全边界</p>
+            </div>
+        </div>
+
+        <!-- 第六题 -->
+        <div v-if="currentStep === 6" class="question">
+            <h3>6. 项目最短变现时间</h3>
+            <textarea v-model="answers.q6" class="text-input" 
+                placeholder="请输入预计的最短变现时间" rows="4"></textarea>
+            <button @click="nextStep" class="btn" v-if="answers.q6">下一步</button>
+        </div>
+
+        <!-- 第七题 -->
+        <div v-if="currentStep === 7" class="question">
+            <h3>7. 项目跑路的可能性分析</h3>
+            <textarea v-model="answers.q7" class="text-input" 
+                placeholder="请分析项目跑路的可能性及原因" rows="4"></textarea>
+            <button @click="showResult" class="btn" v-if="answers.q7">查看结果</button>
+        </div>
+
+        <!-- 结果展示 -->
+        <div v-if="currentStep === 8" class="result">
+            <h2>投资决策评估报告</h2>
+            <div>
+                <h3>项目名称</h3>
+                <p>{{ answers.projectName }}</p>
+
+                <h3>1. 项目方背景调查</h3>
+                <h4>团队背景：</h4>
+                <p>{{ answers.q1.background_details }}</p>
+                <h4>健康状况：</h4>
+                <p v-if="answers.q1.health_passed === true" style="color: #ff4d4f;">存在健康风险：{{ answers.q1.health_details }}</p>
+                <p v-else>无重大健康风险</p>
+                <h4>KYC验证信息：</h4>
+                <p>{{ answers.q1.kyc_details }}</p>
+                
+                <h3>2. 项目的主要应用场景</h3>
+                <p>{{ answers.q2.application }}</p>
+                <h4>地区风险分析：</h4>
+                <p v-if="answers.q2.has_risk" style="color: #ff4d4f;">存在不稳定因素：{{ answers.q2.risk_details }}</p>
+                <p v-else>无地区不稳定风险</p>
+                
+                <h3>3. 项目当前估值与股权结构</h3>
+                <p>{{ answers.q3 }}</p>
+                
+                <h3>4. 项目预期估值</h3>
+                <p>{{ answers.q4 }}</p>
+                
+                <h3>5. 安全边界分析</h3>
+                <p>{{ answers.q5.details }}</p>
+                
+                <h3>6. 项目最短变现时间</h3>
+                <p>{{ answers.q6 }}</p>
+                
+                <h3>7. 项目跑路可能性分析</h3>
+                <p>{{ answers.q7 }}</p>
+                
+                <div style="margin-top: 30px;">
+                    <button @click="saveReport" class="btn" style="background-color: #1890ff; padding: 12px 30px; font-size: 16px;">保存报告</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    currentStep: 1,
+                    answers: {
+                        projectName: '',
+                        q1: { 
+                            background_passed: null, 
+                            background_details: '',
+                            health_passed: null,
+                            health_details: '',
+                            kyc_passed: null,
+                            kyc_details: ''
+                        },
+                        q2: {
+                            application: '',
+                            has_risk: null,
+                            risk_details: ''
+                        },
+                        q3: '',
+                        q4: '',
+                        q5: { passed: null, details: '' },
+                        q6: '',
+                        q7: ''
+                    }
+                }
+            },
+            methods: {
+                nextStep() {
+                    this.currentStep++
+                },
+                showResult() {
+                    this.currentStep = 8
+                },
+                printReport() {
+                    window.print()
+                },
+                async downloadReport() {
+                    const reportElement = document.querySelector('.result')
+                    try {
+                        const canvas = await html2canvas(reportElement)
+                        const link = document.createElement('a')
+                        link.download = '投资决策评估报告.png'
+                        link.href = canvas.toDataURL()
+                        link.click()
+                    } catch (error) {
+                        console.error('导出图片失败:', error)
+                        alert('导出图片失败，请稍后重试')
+                    }
+                },
+                saveReport() {
+                    const report = {
+                        background: {
+                            details: this.answers.q1.background_details,
+                            kyc: this.answers.q1.kyc_details
+                        },
+                        application: {
+                            main: this.answers.q2.application,
+                            risk: this.answers.q2.has_risk ? this.answers.q2.risk_details : '无地区不稳定风险'
+                        },
+                        currentValuation: this.answers.q3,
+                        expectedValuation: this.answers.q4,
+                        safetyBoundary: this.answers.q5.details,
+                        liquidationPeriod: this.answers.q6,
+                        riskAnalysis: this.answers.q7
+                    }
+                    
+                    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' })
+                    const link = document.createElement('a')
+                    link.href = URL.createObjectURL(blob)
+                    link.download = '投资决策评估报告.json'
+                    link.click()
+                    URL.revokeObjectURL(link.href)
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html>
