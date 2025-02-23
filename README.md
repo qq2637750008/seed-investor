@@ -14,7 +14,7 @@
 
 ## 在线使用
 
-访问 [GitHub Pages](https://teihaku.github.io/blockchain-investment-decision) 即可使用在线版本。
+访问 [GitHub Pages](https://teihaku.github.io/seed-invest) 即可使用在线版本。
 
 ## 本地运行
 

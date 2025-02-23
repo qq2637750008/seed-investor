@@ -10,5 +10,6 @@
     "html2canvas": "^1.4.1"
   },
   "author": "teihaku",
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://teihaku.github.io/seed-invest"
 }
